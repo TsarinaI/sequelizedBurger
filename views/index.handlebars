@@ -1,0 +1,62 @@
+<div id="header" class="text-center">
+    <h1 id="title">Burgers for Nomming</h1>
+    {{!-- <img class="burger-image" src="" alt=""> --}}
+</div>
+<div class="container">
+    <div class="col-sm-12 text-center">
+        <h4 "text-center">Which burger do you want to NOM?</h4>
+        <form class="button-size" action="/api/burgers" method="POST">
+            <input type="text" class="text-center" id="insertBurger" name="burger_name" placeholder="Insert Burger Name Here..."></input>
+            <span class="input-group-btn">
+                <button type="submit" class="insertBurgerBtn btn btn-primary">YUMMY!</button>
+            </span>
+        </form>
+    </div>
+    <div class="row">
+        {{!-- Uneaten Burgers --}}
+        <div class="col-sm-6">
+            <h4 class="text-center columnHeading">Burgers to Eat:</h4>
+            {{#each burgers}} {{#unless this.devoured}}
+            <form >
+                <div class="input-group">
+                    <input type="hidden" name="devoured" value="true">
+                    <li class="form-control uneaten">{{this.burger_name}}</li>
+                    <span class="input-group-btn">
+                        <button class="eatBurger btn btn-info" data-id="{{id}}" type="submit">Devour It!</button>
+                    </span>
+                </div>
+            </form>
+            {{/unless}} {{/each}}
+        </div>
+        {{!-- Eaten burgers --}}
+        <div class="col-sm-6">
+            <h4 class="text-center columnHeading">Eaten Burgers:</h4>
+            {{#each burgers}} {{#if this.devoured}}
+            <div>
+                <li class="form-control devoured">{{this.burger_name}}</li>
+            </div>
+            </form>
+            {{/if}} {{/each}}
+        </div>
+    </div>
+    <br>
+</div>
+{{!-- Idea of footer from Star Wars activity --}}
+<footer>
+    <a href="/api" target="_blank">API</a> |
+    <a href="https://github.com/TsarinaI/burger.git" target="_blank">Github Repo</a>
+</footer>
+<script>
+    
+$(".eatBurger").click(function(event){
+    event.preventDefault()
+    let id = $(this).attr("data-id")
+    console.log(id)
+    $.ajax({
+        url:'/api/burgers/'+id,
+        type:'PUT',
+    }).then(function(info){
+        location.reload()
+    })
+})
+</script>
